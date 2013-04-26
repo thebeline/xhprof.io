@@ -1,6 +1,6 @@
 <?php
 // currently not supported
-if (php_sapi_name() != 'cli' && extension_loaded('xhprof') /*&& ($_GET['_xhprof'] == true || 5 > rand(0,99))*/) { // Holding pattern for weighting logging
+if (php_sapi_name() != 'cli' && extension_loaded('xhprof') ) {
 	function xhprof_shutdown() {
 
 		$xhprof_data = xhprof_disable();
