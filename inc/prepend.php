@@ -18,6 +18,6 @@ if (php_sapi_name() != 'cli' && extension_loaded('xhprof') ) {
 		$xhprof_data_obj->save($xhprof_data);
 		
 	}
-	register_shutdown_function(create_function('','register_shutdown_function(create_function(\'\',\'xhprof_shutdown();\'));'));
+	register_shutdown_function(create_function('','register_shutdown_function(\'xhprof_shutdown\');'));
 	xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 }
