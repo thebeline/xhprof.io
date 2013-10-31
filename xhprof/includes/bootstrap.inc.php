@@ -84,7 +84,7 @@ if (empty($_SESSION['xhprof']['remote_version'])) {
 	$ch			= curl_init();
 	
 	curl_setopt_array($ch, array(
-		CURLOPT_URL => 'https://raw.github.com/gajus/xhprof.io/master/version.json',
+		CURLOPT_URL => 'https://raw.github.com/staabm/xhprof.io/master/version.json',
 		CURLOPT_HEADER => FALSE,
 		CURLOPT_RETURNTRANSFER => TRUE
 	));

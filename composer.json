@@ -1,5 +1,5 @@
 {
-  "name": "gajus/xhprof.io",
+  "name": "staabm/xhprof.io",
   "autoload": {
     "classmap": ["xhprof/classes"]
   }
