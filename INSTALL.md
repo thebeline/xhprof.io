@@ -18,3 +18,9 @@ For XHProf.io to start collecting data, you need `/inc/prepend.php` and `/inc/ap
     auto_append_file = /[absolute path to xhprof.io]/inc/append.php
 
 If you are using PHP-FPM, then XHProf.io will utilise `fastcgi_finish_request` to hide any overhead related to data collection. There is nothing to worry about if you are not using PHP-FPM either, as the overhead is less than a few milliseconds.
+
+MySQL configuration
+===================
+
+This app uses InnoDB tables, therefore make sure you adjusted the corresponding mysql configuration (my.cnf) to some proper values.
+For beginners see e.g. http://www.mysqlperformanceblog.com/2007/11/01/innodb-performance-optimization-basics/ for an initial setup.
