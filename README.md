@@ -25,6 +25,11 @@ Changes since forked
   - https://github.com/gajus/xhprof.io/pull/44
   - https://github.com/gajus/xhprof.io/pull/37
 
+Changes planned / Todo
+======================
+
+- PSR2 compilant
+
 CREDITS
 =======
 
