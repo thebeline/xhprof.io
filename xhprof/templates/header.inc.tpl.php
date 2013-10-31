@@ -50,11 +50,17 @@ $labels	= array
 			throw new \Exception('Filter label is not defined.');
 		}
 		
-		if($k == 'request_id'):
-	?>
+		if($k == 'host_id'):
+        ?>
+		<dt><?=$labels[$k]?></dt>
+		<dd><a href="<?=url('uris', array('host_id' => $v))?>"><?=htmlspecialchars($v)?></a></dd>
+        <?php elseif ($k == 'uri_id'): ?>
+		<dt><?=$labels[$k]?></dt>
+		<dd><a href="<?=url('uris', array('uri_id' => $v))?>"><?=htmlspecialchars($v)?></a></dd>
+        <?php elseif ($k == 'request_id'): ?>
 		<dt><?=$labels[$k]?></dt>
 		<dd><a href="<?=url('request', array('request_id' => $v))?>"><?=htmlspecialchars($v)?></a></dd>
-		<?php else:?>
+	    <?php else:?>
 		<dt><?=$labels[$k]?></dt>
 		<dd><?=htmlspecialchars($v)?></dd>
 		<?php endif;?>

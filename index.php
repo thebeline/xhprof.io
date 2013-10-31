@@ -109,6 +109,10 @@ else
 
 $xhprof_data_obj	= new Data($config['pdo']);
 
+// allow the browser to cache pages.
+// usually we use very short cache ttl which help to navigate faster
+header('Cache-Control: private, max-age='. ((int) $config['cache_expiration']));
+
 ob_start();
 require BASE_PATH . '/templates/' . $template['file'] . '.tpl.php';
 $template['body']	= ob_get_clean();

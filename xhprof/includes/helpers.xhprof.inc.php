@@ -113,7 +113,7 @@ function format_microseconds($time, $format = TRUE)
 	$time	= (int) $time;
 
 	$pad	= FALSE;
-	$suffix	= 'µs';
+	$suffix	= '&micro;s';
 
 	if (abs($time) >= 1000)
 	{
@@ -179,13 +179,13 @@ function validate_datetime($input)
 {
 	$format	= 'Y-m-d H:i:s';
 
-	$date	= DateTime::createFromFormat($format, $input);
+	$date	= \DateTime::createFromFormat($format, $input);
 	
 	if($date === FALSE)
 	{
 		$format	= 'Y-m-d';
 	
-		$date	= DateTime::createFromFormat($format, $input);
+		$date	= \DateTime::createFromFormat($format, $input);
 	}
 	
 	return (boolean) $date;

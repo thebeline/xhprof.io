@@ -1,11 +1,14 @@
 <?php
+
 namespace ay\xhprof;
 
 use PDO;
 
 class Data
 {
-	private $db;
+    private $db;
+	
+	private $fetchPlayerStmt, $insertPlayerStmt;
 
 	public function __construct(PDO $db)
 	{		
@@ -186,88 +189,135 @@ class Data
 		
 		$request_id	= $this->db->lastInsertId();
 		
-		$sth1		= $this->db->prepare("INSERT INTO `calls` SET `request_id` = :request_id, `ct` = :ct, `wt` = :wt, `cpu` = :cpu, `mu` = :mu, `pmu` = :pmu, `caller_id` = :caller_id, `callee_id` = :callee_id;");
-		$sth2		= $this->db->prepare("SELECT `id` FROM `players` WHERE `name` = :name LIMIT 1;");
-		$sth3		= $this->db->prepare("INSERT INTO `players` SET `name` = :name;");
+		$sth4       = $this->db->prepare("UPDATE `requests` SET `request_caller_id` = :request_caller_id WHERE `id` = :request_id;");
 		
+		$this->fetchPlayerStmt = $this->db->prepare("SELECT `id` FROM `players` WHERE `name` = :name LIMIT 1;");
+		$this->insertPlayerStmt = $this->db->prepare("INSERT INTO `players` SET `name` = :name;");
+		
+		// collect all data for a batch insert 
+		$callBatch = array();
+		$rootCall = null;
 		foreach($xhprof_data as $call => $data)
 		{
-			$sth1->bindValue(':request_id', $request_id, PDO::PARAM_INT);
-			$sth1->bindValue(':ct', $data['ct'], PDO::PARAM_INT);
-			$sth1->bindValue(':wt', $data['wt'], PDO::PARAM_INT);
-			$sth1->bindValue(':cpu', $data['cpu'], PDO::PARAM_INT);
-			$sth1->bindValue(':mu', $data['mu'], PDO::PARAM_INT);
-			$sth1->bindValue(':pmu', $data['pmu'], PDO::PARAM_INT);
+		    $callRow = array();
+		    $callRow['request_id'] = (int) $request_id;
+		    $callRow['ct'] = (int) $data['ct'];
+		    $callRow['wt'] = (int) $data['wt'];
+		    $callRow['cpu'] = (int) $data['cpu'];
+		    $callRow['mu'] = (int) $data['mu'];
+		    $callRow['pmu'] = (int) $data['pmu'];
 			
 			$call	= explode('==>', $call);
-						
-			if(count($call) == 1)
+		    $nbCall = count($call);
+			if($nbCall == 1)
 			{
-			    // callee
-				$sth2->execute(array('name' => $call[0]));
+			    // root call
+			    $callee_id = $this->fetchOrCreatePlayerId($call[0]);
 			    
-			    $callee_id		= $sth2->fetch(PDO::FETCH_COLUMN);
-			    
-			    $sth2->closeCursor();
-			    
-			    if(!$callee_id)
-			    {
-				    $sth3->execute(array('name' => $call[0]));
-				    
-				    $callee_id	= $this->db->lastInsertId();
-			    }
-			    
-			    $sth1->bindValue(':caller_id', NULL, PDO::PARAM_NULL);
-				$sth1->bindValue(':callee_id', $callee_id);
+				$callRow['caller_id'] = null;
+				$callRow['callee_id'] = (int) $callee_id;
+				
+				$rootCall = $callRow;
 			}
 			else
 			{
-				// caller
-				$sth2->execute(array('name' => $call[0]));
-			    
-			    $caller_id		= $sth2->fetch(PDO::FETCH_COLUMN);
-			    
-			    $sth2->closeCursor();
-			    
-			    if(!$caller_id)
-			    {
-				    $sth3->execute(array('name' => $call[0]));
-				    
-				    $caller_id	= $this->db->lastInsertId();
-			    }
-			    
-			    // callee
-				$sth2->execute(array('name' => $call[1]));
-			    
-			    $callee_id		= $sth2->fetch(PDO::FETCH_COLUMN);
-			    
-			    $sth2->closeCursor();
-			    
-			    if(!$callee_id)
-			    {
-				    $sth3->execute(array('name' => $call[1]));
-				    
-				    $callee_id	= $this->db->lastInsertId();
-			    }
-			    
+				// nested calls
+			    $caller_id = $this->fetchOrCreatePlayerId($call[0]);
+			    $callee_id = $this->fetchOrCreatePlayerId($call[1]);
 			
-				$sth1->bindValue(':caller_id', $caller_id, PDO::PARAM_INT);
-				$sth1->bindValue(':callee_id', $callee_id, PDO::PARAM_INT);
+				$callRow['caller_id'] = (int) $caller_id;
+				$callRow['callee_id'] = (int) $callee_id;
+				
+				// add the rows in reverse order, so the graph will show the function calls in the order they were called
+    			array_unshift($callBatch, $callRow);
 			}
-			
-			$sth1->execute();
-			
-			if(count($call) == 1)
-		    {
-		    	$call_id	= $this->db->lastInsertId();
-		    
-			    $this->db
-			    	->prepare("UPDATE `requests` SET `request_caller_id` = :request_caller_id WHERE `id` = :request_id;")
-			    	->execute(array('request_caller_id' => $call_id, 'request_id' => $request_id));
-		    }
 		}
 		
+		$this->fetchPlayerStmt = null;
+		$this->insertPlayerStmt = null;
+		
+		// insert all the data in bigger batches, for performance reasons
+		foreach(array_chunk($callBatch, 250) as $batch) {
+		    $this->batchInsertCalls($batch);
+		}
+		
+		// mother call has to be the last row inserted
+		$call_id = $this->insertCall($rootCall, true);
+		$sth4->execute(array('request_caller_id' => $call_id, 'request_id' => $request_id));
+		
 		return $request_id;
+	}
+	
+	private function batchInsertCalls(array $calls) {
+	    if (empty($calls)) {
+	        return;
+	    }
+	    
+	    $qry = "INSERT INTO `calls`\n";
+	    
+	    $builtColNames = true;
+	    foreach($calls as $call)
+	    {
+	        if ($builtColNames)
+	        {
+	            $qry .= '('; 
+	            foreach($call as $colName => $val) {
+                    $qry .= $colName .',';
+	            }
+        	    $qry = rtrim($qry, ',');
+	            $qry .= ')'. "\n";
+	            $qry .= ' VALUES '. "\n"; 
+	        }
+	        $builtColNames = false;
+	        
+            $qry .= '('; 
+	        foreach($call as $val) {
+                $qry .= $this->db->quote($val) .",";
+            }
+    	    $qry = rtrim($qry, ',');
+            $qry .= '),'; 
+	    }
+	    $qry = rtrim($qry, ',');
+	    	    
+	    $this->db->query($qry);
+	}
+	
+	private function insertCall(array $call, $requestInsertId = false) {
+	    
+	    $qry = "INSERT INTO `calls` SET ";
+	    
+	    foreach($call as $colName => $val) {
+	        $qry .= $colName .= "=". $this->db->quote($val) .",";
+	    }
+	    $qry = rtrim($qry, ',');
+	    
+	    $this->db->query($qry);
+	    
+	    if ($requestInsertId) {
+	        return $this->db->lastInsertId();
+	    }
+	}
+	
+	private function fetchOrCreatePlayerId($name) {
+	    static $playerIdCache = array();
+	    
+	    if (isset($playerIdCache[$name])) {
+	        return $playerIdCache[$name];
+	    }
+	    
+	    $this->fetchPlayerStmt->execute(array('name' => $name));
+	    $playerId = $this->fetchPlayerStmt->fetch(PDO::FETCH_COLUMN);
+	    $this->fetchPlayerStmt->closeCursor();
+	     
+	    if(!$playerId)
+	    {
+	        $this->insertPlayerStmt->execute(array('name' => $name));
+	        $playerId = $this->db->lastInsertId();
+	        $this->insertPlayerStmt->closeCursor();
+	    }
+	    
+	    $playerIdCache[$name] = $playerId;
+	    return $playerIdCache[$name];
 	}
 	
 	public function getHosts(array $query = NULL)
@@ -464,7 +514,7 @@ class Data
 	}
 	
 	/**
-	 * This method creates a temporary table (ENGINE=InnoDB|MEMORY). The table is populated
+	 * This method creates a temporary table. The table is populated
 	 * with the data necessary to analyze requests matching the query.
 	 * 
 	 * @param	array	$query User-input used to generate the query WHERE and LIMIT clause.
@@ -521,7 +571,7 @@ class Data
 		#header('Content-Type: text/plain'); die(var_dump($data_query));
 		#header('Content-Type: text/plain'); $sth = $this->db->prepare($data_query); $sth->execute(['dataset_size' => 1000]); die(var_dump($sth->fetchAll(PDO::FETCH_ASSOC)));
 		
-		$sth = $this->db->prepare("CREATE TEMPORARY TABLE `temporary_request_data` ENGINE=InnoDB AS ({$data_query});");
+		$sth = $this->db->prepare("CREATE TEMPORARY TABLE `temporary_request_data` ENGINE=". TMP_TABLE_ENGINE ." AS ({$data_query});");
 		
 		$sth->execute($query);
 	}

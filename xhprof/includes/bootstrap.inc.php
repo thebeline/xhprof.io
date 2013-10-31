@@ -53,7 +53,12 @@ if (!isset($config['url_static'])) {
 	$config['url_static'] = $config['url_base'] . 'public/';
 }
 
+if (!isset($config['tmp_table_engine'])) {
+    $config['tmp_table_engine'] = 'Memory';
+}
+
 define('BASE_URL', $config['url_base']);
+define('TMP_TABLE_ENGINE', $config['tmp_table_engine']);
 
 // This class is likely already included by php.ini prepend/append settings
 require_once BASE_PATH . '/classes/data.php';
