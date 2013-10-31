@@ -24,6 +24,16 @@ Changes since forked
 - UI changes
   - https://github.com/gajus/xhprof.io/pull/44
   - https://github.com/gajus/xhprof.io/pull/37
+ 
+  
+DEMO
+====
+
+At the moment, the fork looks more or less like the original version.
+Most changes occured under the hood to boost performance.
+To get an idea how thinks look like see http://xhprof.io/.
+
+We will setup our own demo version shortly.
 
 CREDITS
 =======
