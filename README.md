@@ -4,7 +4,7 @@ xhprof.io
 GUI to analyze the profiling data collected using XHProf – A Hierarchical Profiler for PHP.
 
 This fork was intially started because of a lack of time by the origin author to maintain the codebase (see credits).
-Let's try to get this great app to the next level, which will also help bring your own apps on step closer to performance heaven ;-).
+Let's try to get this great app to the next level, which will also help bring your own apps one step closer to performance heaven ;-).
 
 
 Changes since forked
