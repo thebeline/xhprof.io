@@ -25,13 +25,6 @@ Changes since forked
   - https://github.com/gajus/xhprof.io/pull/44
   - https://github.com/gajus/xhprof.io/pull/37
 
-Changes planned / Todo
-======================
-
-- PSR2 compilance
-- DEMO of latest stable version
-- Travis CI integration
-
 CREDITS
 =======
 
