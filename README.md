@@ -3,8 +3,8 @@ xhprof.io
 
 GUI to analyze the profiling data collected using XHProf – A Hierarchical Profiler for PHP.
 
-Differences between this fork and the origin
-============================================
+Changes since forked
+====================
 
 - divers performance improvements
   - https://github.com/gajus/xhprof.io/pull/55
@@ -19,6 +19,7 @@ Differences between this fork and the origin
 - PHP5.3 compatibility
 - UI changes
   - https://github.com/gajus/xhprof.io/pull/44
+  - https://github.com/gajus/xhprof.io/pull/37
 
 CREDITS
 =======
