@@ -5,6 +5,11 @@ if(php_sapi_name() == 'cli')
 	return;
 }
 
+// do not profile debugging sessions (ZendDebugger)
+if (!empty($_COOKIE['start_debug'])) {
+    return;
+}
+
 // check for an app specific config which may override the global config:
 $appConfig = array();
 
