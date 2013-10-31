@@ -28,7 +28,9 @@ Changes since forked
 Changes planned / Todo
 ======================
 
-- PSR2 compilant
+- PSR2 compilance
+- DEMO of latest stable version
+- Travis CI integration
 
 CREDITS
 =======
