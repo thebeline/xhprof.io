@@ -6,6 +6,8 @@ GUI to analyze the profiling data collected using XHProf – A Hierarchical Prof
 This fork was intially started because of a lack of time by the origin author to maintain the codebase (see credits).
 Let's try to get this great app to the next level, which will also help bring your own apps one step closer to performance heaven ;-).
 
+With the changes applied to this fork, we were able to reduce the impact of profiling in our scenario from 10-20s down to 500-800ms.
+
 
 Changes since forked
 ====================
