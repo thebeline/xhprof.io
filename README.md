@@ -12,6 +12,8 @@ With the changes applied to this fork, we were able to reduce the impact of prof
 Changes since forked
 ====================
 
+- profilling improvements
+  - Do also profile scripts which are terminated with exit() or die(). https://github.com/gajus/xhprof.io/pull/39
 - divers performance improvements
   - https://github.com/gajus/xhprof.io/pull/55
   - https://github.com/gajus/xhprof.io/pull/43
