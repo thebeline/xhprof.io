@@ -287,7 +287,7 @@ class Data
 	    $qry = "INSERT INTO `calls` SET ";
 	    
 	    foreach($call as $colName => $val) {
-	        $qry .= $colName .= "=". $this->db->quote($val) .",";
+	        $qry .= $colName ."=". $this->db->quote($val) .",";
 	    }
 	    $qry = rtrim($qry, ',');
 	    
