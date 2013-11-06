@@ -1,0 +1,15 @@
+language: php
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
+before_script:
+  - composer self-update
+  - composer update --prefer-source
+  - mysql -e 'create database xhprof;'
+  - mysql xhprof < ./setup/database.sql
+
+script:
+  - php -n ./vendor/bin/athletic --path ./tests/performance/ --bootstrap ./tests/Bootstrap.php --formatter GroupedFormatter
