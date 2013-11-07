@@ -26,7 +26,7 @@ require __DIR__ . '/histogram.inc.tpl.php';
 	<table class="requests ay-sort">
 		<thead class="ay-sticky">
 			<tr>
-				<th class="ay-sort ay-sort-desc request-id" rowspan="2">Request ID</th>
+				<th class="ay-sort ay-sort-asc request-id" rowspan="2">Request ID</th>
 				<th class="ay-sort host" rowspan="2">Host</th>
 				<th class="ay-sort" rowspan="2">URI</th>
 				<th class="ay-sort request-method" rowspan="2">Request Method</th>
