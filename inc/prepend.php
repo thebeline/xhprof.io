@@ -44,7 +44,7 @@ function xhprof_init() {
 
     // disabled by app-config?
     if (isset($appConfig['enabled']) && !$appConfig['enabled']) {
-        return;
+        return false;
     }
 
     $xhprofMainConfig = require __DIR__ . '/../xhprof/includes/config.inc.php';
