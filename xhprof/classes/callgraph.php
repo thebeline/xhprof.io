@@ -133,7 +133,7 @@ class Callgraph
 		
 		if(!empty($error))
 		{
-			throw new CallgraphException('DOT produced an error.');
+			throw new CallgraphException('DOT produced an error:'. $error);
 		}
 		
 		if(empty($output))
