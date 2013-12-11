@@ -33,7 +33,7 @@ Changes since forked
 Contribute
 ==========
 
-Feel free to contribute! PRs are welcome. Bring this project one step closer to heaven by providing a PR for issues tagged as [https://github.com/staabm/xhprof.io/issues?labels=accepted&state=open]("accepted").
+Feel free to contribute! PRs are welcome. Bring this project one step closer to heaven by providing a PR for issues tagged as [https://github.com/staabm/xhprof.io/issues?labels=accepted&milestone=&page=1&state=open]("accepted").
 
  
   
