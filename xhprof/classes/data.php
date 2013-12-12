@@ -6,10 +6,20 @@ use PDO;
 
 class Data
 {
+    /**
+     * @var \PDO
+     */
     private $db;
 	
-	private $fetchPlayerStmt, $insertPlayerStmt;
-
+    /**
+     * @var \PDOStatement
+     */
+	private $fetchPlayerStmt;
+	/**
+	 * @var \PDOStatement
+	 */
+	private $insertPlayerStmt;
+	
 	public function __construct(PDO $db)
 	{		
 		$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
@@ -18,7 +28,7 @@ class Data
 		if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
 			$db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, FALSE);
 		}
-
+		
 		$this->db	= $db;
 	}
  
@@ -237,7 +247,7 @@ class Data
 		$this->insertPlayerStmt = null;
 		
 		// insert all the data in bigger batches, for performance reasons
-		foreach(array_chunk($callBatch, 250) as $batch) {
+		foreach(array_chunk($callBatch, 5000) as $batch) {
 		    $this->batchInsertCalls($batch);
 		}
 		
@@ -252,7 +262,6 @@ class Data
 	    if (empty($calls)) {
 	        return;
 	    }
-	    
 	    $qry = "INSERT INTO `calls`\n";
 	    
 	    $builtColNames = true;
