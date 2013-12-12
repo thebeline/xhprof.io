@@ -106,11 +106,11 @@ class Data
 	    );
 	    
 	    // Format the data.
-	    $request['callstack']	= array_map(function($e) use (&$request)
+	    foreach($request['callstack'] as $k => $e)
 	    {
 	    	$request['total']['ct']		+= $e['ct'];
 	    
-	    	return array
+	    	$request['callstack'][$k] = array
 	    	(
 	    		'caller_id'	=> $e['caller_id'],
 	    		'caller'	=> $e['caller'],
@@ -125,7 +125,7 @@ class Data
 	    			'pmu'	=> $e['pmu']
 	    		)
 	    	);
-	    }, $request['callstack']);
+	    }
 	    
 	    return $request;
     }
