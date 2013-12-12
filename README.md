@@ -13,6 +13,7 @@ Changes since forked
 ====================
 
 - profilling improvements
+  - use PreparedStatements only in places where we actually execute them more than once.
   - Do also profile scripts which are terminated with exit() or die(). https://github.com/gajus/xhprof.io/pull/39
   - by default xhprof.io is not profilled to reduce unnecessary load on dev machines. https://github.com/staabm/xhprof.io/commit/cac4403768f13cfd1494ea299d36d26fb38eae97
 - divers performance improvements

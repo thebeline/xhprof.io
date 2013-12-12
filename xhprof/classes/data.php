@@ -34,7 +34,7 @@ class Data
  
     public function get($id)
     {
-	    $sth	= $this->db->prepare("
+	    $request = $this->db->query(sprintf("
 	    	SELECT
 	    		`r1`.`id`,
 	    		UNIX_TIMESTAMP(`r1`.`request_timestamp`) `request_timestamp`,
@@ -53,21 +53,15 @@ class Data
 	    	ON
 	    		`ru1`.`id` = `r1`.`request_uri_id`
 	    	WHERE
-	    		`r1`.`id` = :id
-	    	LIMIT 1;");
-	    	
-	    $sth->execute(array('id' => $id));
-	    
-	    $request	= $sth->fetch(PDO::FETCH_ASSOC);
-	    
-	    $sth->closeCursor();
+	    		`r1`.`id` = %d
+	    	LIMIT 1;", $id))->fetch(PDO::FETCH_ASSOC);
 	    
 	    if(!$request)
 	    {
 		    return FALSE;
 	    }
 	    
-	   $sth	= $this->db->prepare("
+	   $request['callstack'] = $this->db->query(sprintf("
 		    SELECT
 		    	`c1`.`ct`,
 		    	`c1`.`wt`,
@@ -89,15 +83,11 @@ class Data
 		    ON
 		    	`p2`.`id` = `c1`.`callee_id`
 		    WHERE
-		    	`c1`.`request_id` = :request_id
+		    	`c1`.`request_id` = %d
 		    ORDER BY
 		    	`c1`.`id` DESC;
-	    	");
-	    $sth->bindValue(':request_id', $request['id'], PDO::PARAM_INT);
-	    $sth->execute();
-	    
-	    $request['callstack']	= $sth->fetchAll(PDO::FETCH_ASSOC);
-	    
+	    	", $request['id']))->fetchAll(PDO::FETCH_ASSOC);
+	   
 	    // The data input will never change. Therefore,
 	    // I arrange all the values manually.
 	    
@@ -149,60 +139,54 @@ class Data
 		{
 			throw new DataException('XHProf.io cannot function in a server environment that does not define REQUEST_METHOD, HTTP_HOST or REQUEST_URI.');
 		}
-		
-		$sth	= $this->db->prepare("
-			(SELECT 'method_id', `id` FROM `request_methods` WHERE `method` = :method LIMIT 1)
-			UNION ALL
-			(SELECT 'host_id', `id` FROM `request_hosts` WHERE `host` = :host LIMIT 1)
-			UNION ALL
-			(SELECT 'uri_id', `id` FROM `request_uris` WHERE `uri` = :uri LIMIT 1);");
-		
-		$sth->execute(array('method' => $_SERVER['REQUEST_METHOD'], 'host' => $_SERVER['HTTP_HOST'], 'uri' => $_SERVER['REQUEST_URI']));
-		
-		$request	= $sth->fetchAll(PDO::FETCH_KEY_PAIR);
 
+		$query = sprintf("
+	          SELECT
+    			(SELECT `id` FROM `request_methods` WHERE `method` = %s LIMIT 1) as 'method_id',
+    			(SELECT `id` FROM `request_hosts` WHERE `host` = %s LIMIT 1) as 'host_id',
+    			(SELECT `id` FROM `request_uris` WHERE `uri` = %s LIMIT 1) as 'uri_id';",
+    		    $this->db->quote($_SERVER['REQUEST_METHOD']),
+    		    $this->db->quote($_SERVER['HTTP_HOST']),
+    	        $this->db->quote($_SERVER['REQUEST_URI'])
+        );
+		$request = $this->db->query($query)->fetch(PDO::FETCH_ASSOC);
+		
 		if(!isset($request['method_id']))
 		{
-			$this->db
-				->prepare("INSERT INTO `request_methods` SET `method` = :method;")
-				->execute(array('method' => $_SERVER['REQUEST_METHOD']));
+			$this->db->query(sprintf("INSERT INTO `request_methods` SET `method` = %s;", $this->db->quote($_SERVER['REQUEST_METHOD'])));
 		
 			$request['method_id']	= $this->db->lastInsertId();
 		}
 		
 		if(!isset($request['host_id']))
 		{
-			$this->db
-				->prepare("INSERT INTO `request_hosts` SET `host` = :host;")
-				->execute(array('host' => $_SERVER['HTTP_HOST']));
+			$this->db->query(sprintf("INSERT INTO `request_hosts` SET `host` = %s;", $this->db->quote($_SERVER['HTTP_HOST'])));
 		
 			$request['host_id']		= $this->db->lastInsertId();
 		}
 		
 		if(!isset($request['uri_id']))
 		{
-			$this->db
-				->prepare("INSERT INTO `request_uris` SET `uri` = :uri;")
-				->execute(array('uri' => $_SERVER['REQUEST_URI']));
+			$this->db->query(sprintf("INSERT INTO `request_uris` SET `uri` = %s;", $this->db->quote($_SERVER['REQUEST_URI'])));
 		
 			$request['uri_id']		= $this->db->lastInsertId();
 		}
 		
-		$sth	= $this->db->prepare("INSERT INTO `requests` SET `request_host_id` = :request_host_id, `request_uri_id` = :request_uri_id, `request_method_id` = :request_method_id, `https` = :https;");
-		
-		$sth->bindValue(':request_host_id', $request['host_id'], PDO::PARAM_INT);
-		$sth->bindValue(':request_uri_id', $request['uri_id'], PDO::PARAM_INT);
-		$sth->bindValue(':request_method_id', $request['method_id'], PDO::PARAM_INT);
-		$sth->bindValue(':https', empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 0 : 1, PDO::PARAM_INT);
-		
-		$sth->execute();
+		$this->db->query(
+		    sprintf(
+	            "INSERT INTO `requests` SET `request_host_id` = %d, `request_uri_id` = %d, `request_method_id` = %d, `https` = %d;",
+		        $request['host_id'],
+		        $request['uri_id'],
+		        $request['method_id'],
+		        empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 0 : 1
+		    )
+		);
 		
 		$request_id	= $this->db->lastInsertId();
 		
-		$sth4       = $this->db->prepare("UPDATE `requests` SET `request_caller_id` = :request_caller_id WHERE `id` = :request_id;");
-		
-		$this->fetchPlayerStmt = $this->db->prepare("SELECT `id` FROM `players` WHERE `name` = :name LIMIT 1;");
-		$this->insertPlayerStmt = $this->db->prepare("INSERT INTO `players` SET `name` = :name;");
+		$updateRequestStmt       = $this->db->prepare("UPDATE `requests` SET `request_caller_id` = :request_caller_id WHERE `id` = :request_id;");
+		$this->fetchPlayerStmt   = $this->db->prepare("SELECT `id` FROM `players` WHERE `name` = :name LIMIT 1;");
+		$this->insertPlayerStmt  = $this->db->prepare("INSERT INTO `players` SET `name` = :name;");
 		
 		// collect all data for a batch insert 
 		$callBatch = array();
@@ -253,7 +237,7 @@ class Data
 		
 		// mother call has to be the last row inserted
 		$call_id = $this->insertCall($rootCall, true);
-		$sth4->execute(array('request_caller_id' => $call_id, 'request_id' => $request_id));
+		$updateRequestStmt->execute(array('request_caller_id' => $call_id, 'request_id' => $request_id));
 		
 		return $request_id;
 	}
@@ -480,7 +464,7 @@ class Data
 		// build WHERE query
 		if(isset($query['request_id']))
 		{
-			$return['where']	.= ' AND `r1`.`id` = :request_id ';
+			$return['where']	.= sprintf(' AND `r1`.`id` = %d ', $query['request_id']);
 		}
 		
 		if(isset($query['uri'], $query['uri_id']))
@@ -489,11 +473,11 @@ class Data
 		}
 		else if(isset($query['uri']))
 		{
-			$return['where']	.= ' AND `ru1`.`uri` LIKE :uri ';
+			$return['where']	.= sprintf(' AND `ru1`.`uri` LIKE %s ', $this->db->quote($query['uri']));
 		}
 		else if(isset($query['uri_id']))
 		{
-			$return['where']	.= ' AND `r1`.`request_uri_id` = :uri_id ';
+			$return['where']	.= sprintf(' AND `r1`.`request_uri_id` = %d ', $query['uri_id']);
 		}
 		
 		if(isset($query['host'], $query['host_id']))
@@ -502,21 +486,21 @@ class Data
 		}
 		else if(isset($query['host']))
 		{
-			$return['where']	.= ' AND `rh1`.`host` LIKE :host ';
+			$return['where']	.= sprintf(' AND `rh1`.`host` LIKE %s ', $this->db->quote($query['host']));
 		}
 		else if(isset($query['host_id']))
 		{
-			$return['where']	.= ' AND `r1`.`request_host_id` = :host_id ';
+			$return['where']	.= sprintf(' AND `r1`.`request_host_id` = %d ', $query['host_id']);
 		}
 		
 		if(isset($query['datetime_from']))
 		{
-			$return['where']	.= ' AND `r1`.`request_timestamp` > :datetime_from ';
+			$return['where']	.= sprintf(' AND `r1`.`request_timestamp` > %s ', $this->db->quote($query['datetime_from']));
 		}
 		
 		if(isset($query['datetime_to']))
 		{
-			$return['where']	.= ' AND `r1`.`request_timestamp` < :datetime_to ';
+			$return['where']	.= sprintf(' AND `r1`.`request_timestamp` < %s ', $this->db->quote($query['datetime_to']));
 		}
 		
 		return $return;
@@ -532,11 +516,11 @@ class Data
 	 */
 	private function aggregateRequestData($query, array $whitelist = array())
 	{
-		$query['dataset_size']	= empty($query['dataset_size']) ? 1000 : intval($query['dataset_size']);
+		$query['dataset_size']	= empty($query['dataset_size']) ? 1000 : $query['dataset_size'];
 		
 		$sql_query				= $this->buildQuery($query, $whitelist);
 		
-		$data_query = "
+		$data_query = sprintf("
 			SELECT
 				r1.id request_id,
 				UNIX_TIMESTAMP(r1.request_timestamp) request_timestamp,
@@ -572,17 +556,12 @@ class Data
 			ON 
 				c1.id = r1.request_caller_id
 			WHERE
-				1=1 {$sql_query['where']}
+				1=1 %s
 			LIMIT
-				:dataset_size
-		";
+				%d
+		", $sql_query['where'], $query['dataset_size']);
 		
-		#header('Content-Type: text/plain'); die(var_dump($data_query));
-		#header('Content-Type: text/plain'); $sth = $this->db->prepare($data_query); $sth->execute(['dataset_size' => 1000]); die(var_dump($sth->fetchAll(PDO::FETCH_ASSOC)));
-		
-		$sth = $this->db->prepare("CREATE TEMPORARY TABLE `temporary_request_data` ENGINE=". TMP_TABLE_ENGINE ." AS ({$data_query});");
-		
-		$sth->execute($query);
+		$this->db->query("CREATE TEMPORARY TABLE `temporary_request_data` ENGINE=". TMP_TABLE_ENGINE ." AS ({$data_query});");
 	}
 }
 
