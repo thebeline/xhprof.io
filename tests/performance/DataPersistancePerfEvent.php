@@ -1,6 +1,7 @@
 <?php
 
-class DataPersistancePerfEvent extends Athletic\AthleticEvent {
+class DataPersistancePerfEvent extends Athletic\AthleticEvent
+{
     /**
      * @var array
      */
