@@ -35,20 +35,22 @@
 					}
 				} else if (scroll_top > thead_offset) {
 					clone	= thead.clone();
-					
 					clone.insertBefore(thead);
-					
-					$(window).on('resize', function () {
-						clone.find('th').each(function (index) {
-							thead.find('th').eq(index).css({width: $(this).width()+1});
-						});
-					}).trigger('resize');
 					
 					thead.css({position: 'fixed', top: 0}).addClass('ay-position-fixed');
 					
 					present	= true;
 				}
 			}));
+			
+			$(window).on('resize', $.throttle( 100, function () {
+				if (clone && thead) {
+					clone.find('th').each(function (index) {
+						thead.find('th').eq(index).css({width: $(this).width()+1});
+					});
+				}
+			})).trigger('resize');
+			
 		});
 	};
 })($);
