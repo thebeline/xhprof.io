@@ -6,6 +6,7 @@ namespace ay\xhprof;
 	<link rel="stylesheet" href="<?=$config['url_static']?>css/frontend.css" type="text/css" charset="utf-8">
 	
 	<script type="text/javascript" src="<?=$config['url_static']?>js/jquery-1.9.0.min.js"></script>
+	<script type="text/javascript" src="<?=$config['url_static']?>js/jquery.ba-throttle-debounce.min.js"></script>
 	
 	<script type="text/javascript" src="<?=$config['url_static']?>js/jquery.ay-toggle-element.js"></script>
 	<script type="text/javascript" src="<?=$config['url_static']?>js/jquery.ay-table-sort.js"></script>

@@ -22,7 +22,7 @@
 			var present;
 			var clone;
 			
-			$(document).on('scroll', function () {
+			$(document).on('scroll', $.throttle( 100, function () {
 				var scroll_top	= $(this).scrollTop();
 				
 				if (present) {
@@ -48,7 +48,7 @@
 					
 					present	= true;
 				}
-			});
+			}));
 		});
 	};
 })($);
