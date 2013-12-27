@@ -18,7 +18,7 @@ namespace ay\xhprof;
             </div>
             <?php if($template['file'] != 'hosts'):?>
                 <div class="column">
-                    <?=\ay\input('query[uri]', 'URI', NULL, array('comment' => 'You can use <code>%</code> just like in the <a href="http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html#operator_like" target="_blank">SQL LIKE</a> conditionals to match results.'))?>
+                    <?=\ay\input('query[uri]', 'URI', array('id' => 'uris'), array('comment' => 'You can use <code>%</code> just like in the <a href="http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html#operator_like" target="_blank">SQL LIKE</a> conditionals to match results.'))?>
                 </div>
                 <div class="column">
                     <?=\ay\input('query[uri_id]', 'URI #')?>
@@ -44,7 +44,11 @@ namespace ay\xhprof;
 <script>
 jQuery(function($) {
     $( "#hosts" ).autocomplete({
-    	source: "?xhprof[template]=api&xhprof[query][target]=hosts&ay[debug]=1",
+    	source: "?xhprof[template]=api&xhprof[query][target]=hosts",
+    	minLength: 2,
+	});
+    $( "#uris" ).autocomplete({
+    	source: "?xhprof[template]=api&xhprof[query][target]=uris&xhprof[query][host_id]=<?php echo $_GET['xhprof']['query']['host_id']; ?>",
     	minLength: 2,
 	});
 	

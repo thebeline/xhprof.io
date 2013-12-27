@@ -20,6 +20,19 @@ switch ($_GET['xhprof']['query']['target']) {
         
         break;
     }
+    case 'uris': {
+        header('Content-Type: application/json');
+        
+        $filter = array('host_id' => $_GET['xhprof']['query']['host_id']);
+        
+        if(!\ay\error_present()) {
+            $hosts	= $xhprof_api_obj->getUris($_GET['term'], $filter);
+            
+            echo json_encode($hosts);
+        }
+        
+        break;
+    }
     default : throw new \Exception('Invalid target.');
 }
 

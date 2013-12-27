@@ -38,4 +38,41 @@ class api
         
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+    
+    public function getUris($likeUri, $filter = array()) {
+        if (empty($filter['host_id'])) {
+            $stmt = $this->db->prepare("
+                SELECT
+                    `uri`
+                FROM
+                    `request_uris`
+                WHERE
+                    `uri` LIKE ?
+                ORDER BY
+                    `uri`
+                LIMIT 15;
+            ");
+            $stmt->execute(array('%'. $likeUri .'%'));
+        }
+        else
+        {
+            $stmt = $this->db->prepare("
+                SELECT
+                    `u`.`uri`
+                FROM
+                    `requests` `r`
+                LEFT JOIN
+                    `request_uris` `u` ON `r`.`request_uri_id` = `u`.`id`
+                WHERE
+                    `r`.`request_host_id` = ? AND
+                    `u`.`uri` LIKE ?
+                ORDER BY
+                    `u`.`uri`
+                LIMIT 15;
+            ");
+            $stmt->execute(array($filter['host_id'], '%'. $likeUri .'%'));
+        }
+        
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }
