@@ -3,8 +3,9 @@ namespace ay\xhprof;
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="<?=$config['url_static']?>css/frontend.css" type="text/css">
-    <link rel="stylesheet" href="<?=$config['url_static']?>css/jquery-ui.custom.min.css" type="text/css">
+    <link rel="stylesheet" href="<?=$config['url_static']?>css/frontend.css">
+    <link rel="stylesheet" href="<?=$config['url_static']?>css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=$config['url_static']?>css/jquery-ui.custom.min.css">
 
     <script type="text/javascript" src="<?=$config['url_static']?>js/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$config['url_static']?>js/jquery-ui.custom.min.js"></script>
