@@ -32,7 +32,7 @@ class api
                 `host` LIKE ?
             ORDER BY
                 `host`
-            LIMIT 25;
+            LIMIT 15;
         ");
         $stmt->execute(array('%'. $likeHost .'%'));
         
