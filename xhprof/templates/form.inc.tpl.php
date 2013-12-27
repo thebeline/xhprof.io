@@ -1,5 +1,11 @@
 <?php
 namespace ay\xhprof;
+
+$host_id = '';
+if (!empty($_GET['xhprof']['query']['host_id'])) {
+    $host_id = $_GET['xhprof']['query']['host_id'];
+}
+
 ?>
 <form action="" method="post" id="filter">
     <div class="columns">
@@ -48,7 +54,7 @@ jQuery(function($) {
     	minLength: 2,
 	});
     $( "#uris" ).autocomplete({
-    	source: "?xhprof[template]=api&xhprof[query][target]=uris&xhprof[query][host_id]=<?php echo $_GET['xhprof']['query']['host_id']; ?>",
+    	source: "?xhprof[template]=api&xhprof[query][target]=uris&xhprof[query][host_id]=<?php echo $host_id ?>",
     	minLength: 2,
 	});
 	
