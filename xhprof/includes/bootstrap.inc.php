@@ -63,6 +63,7 @@ define('TMP_TABLE_ENGINE', $config['tmp_table_engine']);
 // This class is likely already included by php.ini prepend/append settings
 require_once BASE_PATH . '/classes/data.php';
 
+require BASE_PATH . '/classes/api.php';
 require BASE_PATH . '/classes/model.php';
 require BASE_PATH . '/classes/callgraph.php';
 

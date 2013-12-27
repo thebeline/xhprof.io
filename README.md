@@ -30,6 +30,7 @@ Changes since forked
 - UI changes
   - https://github.com/gajus/xhprof.io/pull/44
   - https://github.com/gajus/xhprof.io/pull/37
+  - Added autocompletion capabilities
  
 Contribute
 ==========
