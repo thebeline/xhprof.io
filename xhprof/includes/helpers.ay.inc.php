@@ -2,6 +2,15 @@
 namespace ay;
 
 /**
+ * Detects whether the request was triggered using a AJAX lib (jQuery,..)
+ * 
+ * @return boolean
+ */
+function isAjax() {
+    return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+}
+
+/**
  * @author Gajus Kuizinas <g.kuizinas@anuary.com>
  * @version 1.0.3 (2012 06 19)
  */
