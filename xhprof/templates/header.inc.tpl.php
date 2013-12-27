@@ -9,8 +9,8 @@ $navigation	= array
 );
 ?>
 <div id="navigation">
-    <div class="button-filter">Filter</div>
-    <div class="button-summary">Summary</div>
+    <div class="button-filter" title="Toggles visibility of the filters">Filter</div>
+    <div class="button-summary" title="Toggles visibility of the summary">Summary</div>
 
 <?php foreach($navigation as $e):?>
     <a href="<?=$e['url']?>"<?php if(!empty($e['class'])):?> class="<?=$e['class']?>"<?php endif;?>><?=$e['name']?></a>
