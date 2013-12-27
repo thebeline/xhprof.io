@@ -5,10 +5,10 @@ namespace ay\xhprof;
     <div class="columns">
         <?php if($template['file'] != 'request'):?>
             <div class="column">
-                <?=\ay\input('query[datetime_from]', 'Date-time from', NULL, array('comment' => '<a href="http://lt.php.net/manual/en/datetime.createfromformat.php" target="_blank">Date-time format</a> is <code>Y-m-d H:i:s</code> or timeless (<code>Y-m-d</code>).'))?>
+                <?=\ay\input('query[datetime_from]', 'Date-time from', array('id' => 'dateFrom'), array('comment' => '<a href="http://lt.php.net/manual/en/datetime.createfromformat.php" target="_blank">Date-time format</a> is <code>Y-m-d H:i:s</code> or timeless (<code>Y-m-d</code>).'))?>
             </div>
             <div class="column">
-                <?=\ay\input('query[datetime_to]', 'Date-time to', NULL, array('comment' => '<a href="http://lt.php.net/manual/en/datetime.createfromformat.php" target="_blank">Date-time format</a> is <code>Y-m-d H:i:s</code> or timeless (<code>Y-m-d</code>).'))?>
+                <?=\ay\input('query[datetime_to]', 'Date-time to', array('id' => 'dateTo'), array('comment' => '<a href="http://lt.php.net/manual/en/datetime.createfromformat.php" target="_blank">Date-time format</a> is <code>Y-m-d H:i:s</code> or timeless (<code>Y-m-d</code>).'))?>
             </div>
             <div class="column">
                 <?=\ay\input('query[host]', 'Host', array('id' => 'hosts'), array( 'comment' => 'You can use <code>%</code> just like in the <a href="http://dev.mysql.com/doc/refman/5.0/en/string-comparison-functions.html#operator_like" target="_blank">SQL LIKE</a> conditionals to match results.'))?>
@@ -46,6 +46,19 @@ jQuery(function($) {
     $( "#hosts" ).autocomplete({
     	source: "?xhprof[template]=api&xhprof[query][target]=hosts&ay[debug]=1",
     	minLength: 2,
+	});
+	
+	$( "#dateFrom" ).datepicker({
+ 		dateFormat: "yy-mm-dd",
+		 onClose: function( selectedDate ) {
+			 $( "#dateTo" ).datepicker( "option", "minDate", selectedDate );
+		 }
+	});
+	$( "#dateTo" ).datepicker({
+ 		dateFormat: "yy-mm-dd",
+		 onClose: function( selectedDate ) {
+			 $( "#dateFrom" ).datepicker( "option", "maxDate", selectedDate );
+		 }
 	});
 });
 </script>
