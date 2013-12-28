@@ -36,6 +36,7 @@
 				} else if (scroll_top > thead_offset) {
 					clone	= thead.clone();
 					clone.insertBefore(thead);
+					$(window).trigger('resize');
 					
 					thead.css({position: 'fixed', top: 0}).addClass('ay-position-fixed');
 					
@@ -46,10 +47,10 @@
 			$(window).on('resize', $.throttle( 100, function () {
 				if (clone && thead) {
 					clone.find('th').each(function (index) {
-						thead.find('th').eq(index).css({width: $(this).width()+1});
+						thead.find('th').eq(index).css({width: $(this).width()});
 					});
 				}
-			})).trigger('resize');
+			}));
 			
 		});
 	};
