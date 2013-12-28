@@ -46,8 +46,10 @@ We will setup our own demo version shortly.
 DEVELOPERS
 ==========
 
-make sure to install a less compiler, e.g. integrated in your IDE
-- phpstorm: http://www.jetbrains.com/phpstorm/webhelp/transpiling-sass-less-and-scss-to-css.html#d151302e510
+Make sure to install a less compiler
+`npm install -g less`
+
+You might also like it integrated in your favorite IDE, e.g. phpstorm http://www.jetbrains.com/phpstorm/webhelp/transpiling-sass-less-and-scss-to-css.html#d151302e510
 
 CREDITS
 =======
