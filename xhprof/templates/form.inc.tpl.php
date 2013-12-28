@@ -51,24 +51,24 @@ if (!empty($_GET['xhprof']['query']['host_id'])) {
 jQuery(function($) {
     $( "#hosts" ).autocomplete({
     	source: "?xhprof[template]=api&xhprof[query][target]=hosts",
-    	minLength: 2,
+    	minLength: 2
 	});
     $( "#uris" ).autocomplete({
     	source: "?xhprof[template]=api&xhprof[query][target]=uris&xhprof[query][host_id]=<?php echo $host_id ?>",
-    	minLength: 2,
+    	minLength: 2
 	});
 	
 	$( "#dateFrom" ).datepicker({
  		dateFormat: "yy-mm-dd",
-		 onClose: function( selectedDate ) {
-			 $( "#dateTo" ).datepicker( "option", "minDate", selectedDate );
-		 }
+		onClose: function( selectedDate ) {
+			$( "#dateTo" ).datepicker( "option", "minDate", selectedDate );
+		}
 	});
 	$( "#dateTo" ).datepicker({
  		dateFormat: "yy-mm-dd",
-		 onClose: function( selectedDate ) {
-			 $( "#dateFrom" ).datepicker( "option", "maxDate", selectedDate );
-		 }
+		onClose: function( selectedDate ) {
+			$( "#dateFrom" ).datepicker( "option", "maxDate", selectedDate );
+		}
 	});
 });
 </script>
