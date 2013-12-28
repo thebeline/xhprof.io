@@ -22,3 +22,11 @@ MySQL configuration
 
 This app uses InnoDB tables, therefore make sure you adjusted the corresponding mysql configuration (my.cnf) to some proper values.
 For beginners see e.g. http://www.mysqlperformanceblog.com/2007/11/01/innodb-performance-optimization-basics/ for an initial setup.
+
+
+Graphviz
+========
+
+To generate proper call graphs you need to install the `dot` binary.
+
+see http://www.graphviz.org/Download..php
