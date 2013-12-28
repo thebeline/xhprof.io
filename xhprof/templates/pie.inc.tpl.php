@@ -32,18 +32,23 @@ $get_values		= function ($metric_name, $limit = 5) use ($sort_stack_by) {
 ?>
 <div class="pie-layout">
     <div class="chart">
+        <div class="label">Call Count</div>
         <svg class="pie-ct"></svg>
     </div>
     <div class="chart">
+        <div class="label">Wall Time</div>
         <svg class="pie-wt"></svg>
     </div>
     <div class="chart">
+        <div class="label">CPU Time</div>
         <svg class="pie-cpu"></svg>
     </div>
     <div class="chart">
+        <div class="label">Memory Usage</div>
         <svg class="pie-mu"></svg>
     </div>
     <div class="chart">
+        <div class="label">Peak Memory Usage</div>
         <svg class="pie-pmu"></svg>
     </div>
 </div>

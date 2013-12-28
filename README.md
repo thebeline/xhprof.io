@@ -25,6 +25,7 @@ Changes since forked
   - More navigation options
   - Fixed non-utf8 characters
   - Added autocompletion capabilities
+  - More descriptive labels
  
 Contribute
 ==========
