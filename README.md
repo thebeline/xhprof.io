@@ -27,6 +27,11 @@ Changes since forked
   - Added autocompletion capabilities
   - More descriptive labels
   
+INSTALL
+=======
+
+For installation instructions see https://github.com/staabm/xhprof.io/blob/master/INSTALL.md
+  
 DEMO
 ====
 
