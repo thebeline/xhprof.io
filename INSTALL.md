@@ -29,4 +29,4 @@ Graphviz
 
 To generate proper call graphs you need to install the `dot` binary.
 
-see http://www.graphviz.org/Download..php
+see http://www.graphviz.org/Download..php or http://chocolatey.org/packages/Graphviz for windows.
