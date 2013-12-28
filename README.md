@@ -26,13 +26,6 @@ Changes since forked
   - Fixed non-utf8 characters
   - Added autocompletion capabilities
   - More descriptive labels
- 
-Contribute
-==========
-
-Feel free to contribute! PRs are welcome. Bring this project one step closer to heaven by providing a PR for issues tagged as "accepted".
-
- 
   
 DEMO
 ====
@@ -42,6 +35,11 @@ Most changes occured under the hood to boost performance.
 To get an idea how thinks look like see http://xhprof.io/.
 
 We will setup our own demo version shortly.
+
+Contribute
+==========
+
+Feel free to contribute! PRs are welcome. Bring this project one step closer to heaven by providing a PR for issues tagged as "accepted".
 
 DEVELOPERS
 ==========
