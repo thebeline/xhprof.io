@@ -14,22 +14,16 @@ Changes since forked
 
 - profilling improvements
   - use PreparedStatements only in places where we actually execute them more than once.
-  - Do also profile scripts which are terminated with exit() or die(). https://github.com/gajus/xhprof.io/pull/39
-  - by default xhprof.io is not profilled to reduce unnecessary load on dev machines. https://github.com/staabm/xhprof.io/commit/cac4403768f13cfd1494ea299d36d26fb38eae97
-- divers performance improvements
-  - https://github.com/gajus/xhprof.io/pull/55
-  - https://github.com/gajus/xhprof.io/pull/43
-  - https://github.com/gajus/xhprof.io/pull/42
-- easier debugging
-  - https://github.com/gajus/xhprof.io/pull/56
-- more comfortable configuration 
-  - https://github.com/gajus/xhprof.io/pull/40
-- ZendDebugger support
-  - https://github.com/gajus/xhprof.io/pull/48
+  - Do also profile scripts which are terminated with exit() or die().
+  - by default the xhprof.io UI is not profilled to reduce unnecessary load on dev machines. 
+- lots of performance improvements
+- easier debugging, better exception handling in shutdown functions
+- more comfortable configuration, like apache does with allow override
+- ZendDebugger support (no profilling while debugger is running)
 - PHP5.3 compatibility
 - UI changes
-  - https://github.com/gajus/xhprof.io/pull/44
-  - https://github.com/gajus/xhprof.io/pull/37
+  - More navigation options
+  - Fixed non-utf8 characters
   - Added autocompletion capabilities
  
 Contribute
@@ -47,6 +41,12 @@ Most changes occured under the hood to boost performance.
 To get an idea how thinks look like see http://xhprof.io/.
 
 We will setup our own demo version shortly.
+
+DEVELOPERS
+==========
+
+make sure to install a less compiler, e.g. integrated in your IDE
+- phpstorm: http://www.jetbrains.com/phpstorm/webhelp/transpiling-sass-less-and-scss-to-css.html#d151302e510
 
 CREDITS
 =======
