@@ -1,6 +1,9 @@
 <?php
 namespace ay\xhprof;
 
+/**
+ * @var $xhprof_obj model
+ */
 $grouped_stack	= $xhprof_obj->getGroupedStack();
 
 $sort_stack_by	= function ($metric_name) use ($grouped_stack) {

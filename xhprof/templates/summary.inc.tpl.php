@@ -1,6 +1,10 @@
 <?php
 namespace ay\xhprof;
 
+/**
+ * @var $xhprof_data_obj data
+ */
+
 $aggregated_metrics	= $xhprof_data_obj->getMetricsSummary();
 
 $labels		= array

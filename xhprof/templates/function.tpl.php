@@ -1,6 +1,10 @@
 <?php
 namespace ay\xhprof;
 
+/**
+ * @var $xhprof_data_obj data
+ */
+
 if(!isset($_GET['xhprof']['query']['request_id'], $_GET['xhprof']['query']['callee_id'])) {
     throw new \Exception('Missing required parameters.');
 }

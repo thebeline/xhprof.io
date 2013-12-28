@@ -1,6 +1,10 @@
 <?php
 namespace ay\xhprof;
 
+/**
+ * @var $xhprof_data_obj data
+ */
+
 if(!\ay\error_present()) {
     $data	= $xhprof_data_obj->getRequests($_GET['xhprof']['query']);
 

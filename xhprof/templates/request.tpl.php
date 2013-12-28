@@ -1,6 +1,10 @@
 <?php
 namespace ay\xhprof;
 
+/**
+ * @var $xhprof_data_obj data
+ */
+
 if (empty($_GET['xhprof']['query']['request_id'])) {
     throw new \Exception('Request data can be accessed only through the ID.');
 }
