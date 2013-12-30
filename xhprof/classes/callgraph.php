@@ -39,7 +39,7 @@ class callgraph
             } else {
                 $ct	= '';
 
-                if($e['caller']) {
+                if($e['caller'] && $e['metrics']['ct'] > 1) {
                     $ct	= '<tr>
                         <td align="left" width="50">ct</td>
                         <td align="left">' . $e['metrics']['ct'] . '</td>
