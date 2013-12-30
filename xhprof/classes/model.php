@@ -155,7 +155,7 @@ class model
             $cur = $this->findNodeInStack($cur['caller_id'], $callstack);
         }
         
-        return array_reverse($parents);
+        return $parents;
     }
     
     private function findNodeInStack($calleeId, $callstack) {
