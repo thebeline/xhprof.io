@@ -23,7 +23,13 @@ if(!$aggregated_family) {
     throw new \Exception('Function is not in the callstack.');
 }
 
-$table_row			= function ($e) use ($request) {
+$contextCallgraph = '';
+if(!empty($aggregated_family['children'])) {
+    $root = $aggregated_family['callee']['callee_id'];
+    $contextCallgraph = ' <a href="?xhprof[callgraph]=1&xhprof[template]=request&xhprof[query][request_id]='. $request['id'] .'&xhprof[callgraph][root]='.$root.'" target="_blank">Drill-Down Callgraph</a>';
+}
+
+$table_row			= function ($e, $moreHtml = '') use ($request) {
     $e['metrics']				= format_metrics($e['metrics']);
     $e['metrics']['inclusive']	= format_metrics($e['metrics']['inclusive']);
     $e['metrics']['exclusive']	= format_metrics($e['metrics']['exclusive']);
@@ -35,7 +41,7 @@ $table_row			= function ($e) use ($request) {
 
     ?>
     <tr<?php if($e['internal']):?> class="internal"<?php endif;?>>
-        <td><a href="<?=url('function', array('request_id' => $request['id'], 'callee_id' => $e['callee_id']))?>"><?=$e['callee']?></a></td>
+        <td><a href="<?=url('function', array('request_id' => $request['id'], 'callee_id' => $e['callee_id']))?>"><?=$e['callee']?></a><?= $moreHtml; ?></td>
 
         <td class="metrics" data-ay-sort-weight="<?=$e['metrics']['ct']['raw']?>"><?=$e['metrics']['ct']['formatted']?></td>
         <td class="metrics" data-ay-sort-weight="<?=$e['metrics']['ct']['raw']*100/$request['total']['ct']?>"><?=format_number($e['metrics']['ct']['raw']*100/$request['total']['ct'])?>%</td>
@@ -116,7 +122,7 @@ $table_row			= function ($e) use ($request) {
             <tr>
                 <th colspan="15">Current Function</th>
             </tr>
-            <?=$table_row($aggregated_family['callee'])?>
+            <?=$table_row($aggregated_family['callee'], $contextCallgraph)?>
         </tbody>
 
         <?php if(!empty($aggregated_family['children'])):?>

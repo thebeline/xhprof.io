@@ -33,8 +33,19 @@ class callgraph
         }
 
         $group_colors	= array('#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf');
-
+        
+        $graphRoot = null;
+        if (!empty($_GET['xhprof']['callgraph']['root'])) {
+            $graphRoot = $_GET['xhprof']['callgraph']['root'];
+        }
+        $output = false;
         foreach($callstack as $e) {
+            if ($graphRoot) {
+                if (preg_match('@'. '_'.  $graphRoot .'(_|$)@', $e['uid']) !== 1) {
+                    continue;
+                }
+            }
+            
             $callee_uid	= $e['uid'] . '_' . $e['callee_id'];
 
             if($e['caller']) {
