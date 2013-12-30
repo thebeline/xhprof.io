@@ -140,7 +140,7 @@ class model
         {
             // we reached a node which already knows his parents
             if (!empty($cur['parents'])) {
-                foreach($cur['parents'] as $parent) {
+                foreach(array_reverse($cur['parents']) as $parent) {
                     $parents[] = $parent;
                 }
                 break;
@@ -154,8 +154,10 @@ class model
             
             $cur = $this->findNodeInStack($cur['caller_id'], $callstack);
         }
-        
-        return $parents;
+
+        // child-parent relations are modelled using the same prefix in parent-path
+        // reverse the path so all node start at the same main node
+        return array_reverse($parents);
     }
     
     private function findNodeInStack($calleeId, $callstack) {
