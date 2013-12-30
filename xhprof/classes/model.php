@@ -131,39 +131,49 @@ class model
             'children'	=> $children
         );
     }
+    
+    private function getPathToParent($node, $callstack) {
+        $parents = array();
+        
+        $cur = $node;
+        while($cur && !empty($cur['caller_id']))
+        {
+            // we reached a node which already knows his parents
+            if (!empty($cur['parents'])) {
+                foreach($cur['parents'] as $parent) {
+                    $parents[] = $parent;
+                }
+                break;
+            }
+            $parents[]	= $cur['caller_id'];
+            
+            // we reached the top of the stack
+            if ($cur['caller_id'] == 'xhprof') {
+                break;
+            }
+            
+            $cur = $this->findNodeInStack($cur['caller_id'], $callstack);
+        }
+        
+        return array_reverse($parents);
+    }
+    
+    private function findNodeInStack($calleeId, $callstack) {
+        foreach($callstack as $el) {
+            if ($el['callee_id'] == $calleeId) {
+                return $el;
+            }
+        }
+    }
 
     public function assignUID()
     {
         $callstack	= $this->request['callstack'];
-
-        foreach($callstack as &$c) {
-            $c['parents']			= array();
-
-            unset($c);
-        }
-
         $callstack[0]['caller_id']	= 'xhprof';
-
-        // Populate every tree node with an array of every ancestor they have.
-        $populate_tree_parent		= function (&$node) use (&$populate_tree_parent, &$callstack) {
-            if($node['caller_id']) {
-                $node['parents'][]	= $node['caller_id'];
-            }
-
-            foreach($callstack as &$e) {
-                // find children
-                if($node['callee_id'] == $e['caller_id']) {
-                    // let the child know who is his father
-                    $e['parents']	= $node['parents'];
-
-                    $populate_tree_parent($e);
-                }
-
-                unset($e);
-            }
-        };
-
-        $populate_tree_parent($callstack[0]);
+        
+        foreach($callstack as &$c) {
+            $c['parents']			= $this->getPathToParent($c, $callstack);
+        }
 
         return array_map(function ($e) {
             // UID is used to determine the child-parent relation in an exclusive callgraph.
