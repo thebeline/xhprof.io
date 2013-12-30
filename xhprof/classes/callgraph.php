@@ -4,9 +4,11 @@ namespace ay\xhprof;
 class callgraph
 {
     /**
-     * param	array	$callstack	The callstack must have UIDs.
-     * param	boolean	$output	TRUE will output the content to the stdout and set the Content-Type to text/plain
-     * param	boolean	$debug	TRUE will output a less complicated DOT script.
+     * @param	array	$callstack	The callstack must have UIDs.
+     * @param	boolean	$output	TRUE will output the content to the stdout and set the Content-Type to text/plain
+     * @param	boolean	$debug	TRUE will output a less complicated DOT script.
+     * 
+     * @return resource
      */
     public function dot($callstack, $output = FALSE, $debug = FALSE)
     {
@@ -25,7 +27,7 @@ class callgraph
             $callee_uid	= $e['uid'] . '_' . $e['callee_id'];
 
             if($e['caller']) {
-                $calls[]	= "\t" . $e['uid'] . ' -> ' . $callee_uid . ';';
+                $calls[]	= "\t\"" . $e['uid'] . '" -> "' . $callee_uid . '";';
             }
 
             if(isset($players[$callee_uid])) {
@@ -33,7 +35,7 @@ class callgraph
             }
 
             if($debug) {
-                $players[$callee_uid]	= "\t" . $callee_uid . '[shape=square, label="' . $e['callee'] . '"];';
+                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=square, label="' . $e['callee'] . '"];';
             } else {
                 $ct	= '';
 
@@ -50,7 +52,7 @@ class callgraph
                     $column_group_color	= ' bgcolor="' . $group_colors[$e['group']['index']-1] . '"';
                 }
 
-                $players[$callee_uid]	= "\t" . $callee_uid . '[shape=none, label=<
+                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none, label=<
                 <table border="0" cellspacing="0" cellborder="1" cellpadding="5">
                     <tr>
                         <td colspan="2" align="left"' . $column_group_color . '>' . $e['callee'] . '</td>
@@ -81,7 +83,8 @@ class callgraph
             implode(PHP_EOL, $players) . PHP_EOL . PHP_EOL .
             implode(PHP_EOL, $calls);
 
-        $dot		= "digraph\r{\r{$dot}\r}";
+        $dot		= "digraph\r{\r{$dot}}";
+        
 
         if(!$output) {
             return $dot;
