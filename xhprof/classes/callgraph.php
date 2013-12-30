@@ -51,11 +51,24 @@ class callgraph
                 if(!empty($e['group']) && $e['group']['index'] < 10) {
                     $column_group_color	= ' bgcolor="' . $group_colors[$e['group']['index']-1] . '"';
                 }
+                
+                $class = '';
+                $method = $e['callee'];
+                if(($pos = strpos($e['callee'], '::')) !== false) {
+                    $class = trim(substr($e['callee'], 0, $pos));
+                    $method = substr($e['callee'], $pos + 2);
+                    
+                    // when using eval, callee also contains the filename.
+                    // cut it off, to save space
+                    if(($pos = strpos($method, ':')) !== false) {
+                        $method = trim(substr($method, $pos + 1));
+                    }
+                }
 
-                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none, label=<
-                <table border="0" cellspacing="0" cellborder="1" cellpadding="5">
+                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none,label=<
+                <table border="0" cellspacing="0" cellborder="1" cellpadding="2" CELLSPACING="0">
                     <tr>
-                        <td colspan="2" align="left"' . $column_group_color . '>' . $e['callee'] . '</td>
+                        <td colspan="2" align="left"' . $column_group_color . '>' . $class . '<br />' . $method . '</td>
                     </tr>
                     ' . $ct . '
                     <tr>
@@ -133,7 +146,6 @@ class callgraph
 
         header('Content-Type: image/svg+xml');
         #header('Content-Type: image/png');
-
         echo $output;
 
         exit;
