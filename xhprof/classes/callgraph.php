@@ -3,6 +3,13 @@ namespace ay\xhprof;
 
 class callgraph
 {
+    private $request;
+    
+    public function __construct($request)
+    {
+        $this->request	= $request;
+    }
+    
     /**
      * @param	array	$callstack	The callstack must have UIDs.
      * @param	boolean	$output	TRUE will output the content to the stdout and set the Content-Type to text/plain
@@ -12,6 +19,10 @@ class callgraph
      */
     public function dot($callstack, $output = FALSE, $debug = FALSE)
     {
+        // define min bounds required to be displayed
+        // min number of invocations 
+        $minCt = 1;
+                
         $players	= array();
         $calls		= array();
 
@@ -39,7 +50,7 @@ class callgraph
             } else {
                 $ct	= '';
 
-                if($e['caller'] && $e['metrics']['ct'] > 1) {
+                if($e['caller'] && $e['metrics']['ct'] > $minCt) {
                     $ct	= '<tr>
                         <td align="left" width="50">ct</td>
                         <td align="left">' . $e['metrics']['ct'] . '</td>
@@ -64,8 +75,10 @@ class callgraph
                         $method = trim(substr($method, $pos + 1));
                     }
                 }
+                
+                $href = '?xhprof[template]=function&xhprof[query][request_id]='. $this->request['id'] .'&xhprof[query][callee_id]='. $e['callee_id'];
 
-                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none,tooltip="'. $e['callee'] .'",label=<
+                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none,href="'. $href .'",target="_blank",tooltip="'. $e['callee'] .'",label=<
                 <table border="0" cellspacing="0" cellborder="1" cellpadding="2" CELLSPACING="0">
                     <tr>
                         <td colspan="2" align="left"' . $column_group_color . '>' . $class . '<br />' . $method . '</td>

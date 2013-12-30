@@ -18,7 +18,7 @@ if (!$request) {
 $xhprof_obj = new Model($request);
 
 if (!empty($_GET['xhprof']['callgraph'])) {
-    $xhprof_callgraph	= new Callgraph;
+    $xhprof_callgraph	= new Callgraph($request);
 
     $callstack	= $xhprof_obj->assignUID();
 
