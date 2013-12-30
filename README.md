@@ -21,6 +21,11 @@ Changes since forked
 - more comfortable configuration, like apache does with allow override
 - ZendDebugger support (no profilling while debugger is running)
 - PHP5.3 compatibility
+- charts
+  - faster generation
+  - more usable for big profiles
+  - new context rooted charts
+  - more chart types in the works
 - UI changes
   - More navigation options
   - Fixed non-utf8 characters
