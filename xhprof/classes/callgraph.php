@@ -106,7 +106,7 @@ class callgraph
             array('pipe', 'w')
         );
 
-        $process		= proc_open('dot -Tpng', $descriptors, $pipes, BASE_PATH);
+        $process		= proc_open('dot -Tsvg', $descriptors, $pipes, BASE_PATH);
 
         if($process === FALSE) {
             throw new CallgraphException('Failed to initiate DOT process.');
@@ -131,8 +131,8 @@ class callgraph
             throw new CallgraphException('DOT did not output anything.');
         }
 
-        #header('Content-Type: image/svg+xml');
-        header('Content-Type: image/png');
+        header('Content-Type: image/svg+xml');
+        #header('Content-Type: image/png');
 
         echo $output;
 
