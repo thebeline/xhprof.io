@@ -65,7 +65,7 @@ class callgraph
                     }
                 }
 
-                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none,label=<
+                $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none,tooltip="'. $e['callee'] .'",label=<
                 <table border="0" cellspacing="0" cellborder="1" cellpadding="2" CELLSPACING="0">
                     <tr>
                         <td colspan="2" align="left"' . $column_group_color . '>' . $class . '<br />' . $method . '</td>
