@@ -20,10 +20,10 @@ define('ay\DEBUG', !empty($_SESSION['ay']['debug']));
 
 define('ay\REDIRECT_REFERRER', 1);
 
-define('ay\MESSAGE_NOTICE', 1);
-define('ay\MESSAGE_SUCCESS', 2);
-define('ay\MESSAGE_ERROR', 3);
-define('ay\MESSAGE_IMPORTANT', 4);
+define('ay\MESSAGE_NOTICE', 'notice');
+define('ay\MESSAGE_SUCCESS', 'success');
+define('ay\MESSAGE_ERROR', 'error');
+define('ay\MESSAGE_IMPORTANT', 'important');
 
 define('ay\FORMAT_DATE', 'M j, Y');
 define('ay\FORMAT_DATETIME', 'M j, Y H:i');
@@ -104,7 +104,7 @@ if (empty($_SESSION['xhprof']['remote_version'])) {
 }
 
 if (!empty($_SESSION['xhprof']['remote_version']) && $_SESSION['xhprof']['remote_version'] != VERSION) {
-    \ay\message('You are running an out-of-date version of XHProf.io (' . VERSION . '). The <a href="http://xhprof.io/" target="_blank">current version is ' . htmlspecialchars($_SESSION['xhprof']['remote_version']) . '</a>.', \AY\MESSAGE_NOTICE);
+    \ay\message('You are running an out-of-date version of XHProf.io (' . VERSION . '). The <a href="http://xhprof.io/" target="_blank">current version is ' . htmlspecialchars($_SESSION['xhprof']['remote_version']) . '</a>.', \ay\MESSAGE_NOTICE);
 
     unset($_SESSION['xhprof']['remote_version']);
 }
