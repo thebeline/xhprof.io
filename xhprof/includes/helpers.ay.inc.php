@@ -56,7 +56,7 @@ function message($message, $type = 'error')
     $messages_types	= array('error', 'important', 'notice', 'success');
 
     if(!in_array($type, $messages_types)) {
-        throw new HelperException('Invalid message type.');
+        throw new HelperException(sprintf('Invalid message type "%s".', $type));
     }
 
     $message		= array('type' => $type, 'message' => $message);
