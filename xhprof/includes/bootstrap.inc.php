@@ -67,7 +67,7 @@ require BASE_PATH . '/classes/api.php';
 require BASE_PATH . '/classes/model.php';
 require BASE_PATH . '/classes/callgraph.php';
 
-if (\AY\DEBUG && !empty($_SESSION['ay']['profiling'])) {
+if (\ay\DEBUG && !empty($_SESSION['ay']['profiling'])) {
     require BASE_PATH . '/includes/profiler.inc.php';
 }
 
