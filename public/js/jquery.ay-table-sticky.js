@@ -22,7 +22,15 @@
 			var present;
 			var clone;
 			
-			$(document).on('scroll', function () {
+			function resizeClone() {
+				if (clone && thead) {
+					clone.find('th').each(function (index) {
+						thead.find('th').eq(index).css({width: $(this).width()});
+					});
+				}
+			}			
+			
+			$(document).on('scroll', $.throttle( 100, function () {
 				var scroll_top	= $(this).scrollTop();
 				
 				if (present) {
@@ -35,20 +43,17 @@
 					}
 				} else if (scroll_top > thead_offset) {
 					clone	= thead.clone();
-					
 					clone.insertBefore(thead);
-					
-					$(window).on('resize', function () {
-						clone.find('th').each(function (index) {
-							thead.find('th').eq(index).css({width: $(this).width()+1});
-						});
-					}).trigger('resize');
+					resizeClone();
 					
 					thead.css({position: 'fixed', top: 0}).addClass('ay-position-fixed');
 					
 					present	= true;
 				}
-			});
+			}));
+			
+			$(window).on('resize', $.throttle( 100, resizeClone));
+			
 		});
 	};
 })($);

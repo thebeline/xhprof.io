@@ -1,26 +1,5 @@
 <?php
-// CLI environment is currently not supported
-if(php_sapi_name() == 'cli')
-{
-	return;
-}
+$where = (php_sapi_name() != 'cli') ? "; A Virtual Host directive or .htaccess file associated with the address ".$_SERVER['SERVER_NAME']."/".$_SERVER['REQUEST_URI'] : "";
+$err_msg = "Deprecated: xhprof.io - append.php - Please remove auto_append_file append.php, as this will break in the future. Suggested places to look: Your php.ini; A manual inclusion as a result of executing [".$_SERVER['DOCUMENT_ROOT'].'/'.$_SERVER['PHP_SELF'].']'.$where;
 
-register_shutdown_function(function(){
-	// by registering register_shutdown_function at the end of the file
-	// I make sure that all execution data, including that of the earlier
-	// registered register_shutdown_function, is collected.
-
-	$xhprof_data	= xhprof_disable();
-
-	if(function_exists('fastcgi_finish_request'))
-	{
-		fastcgi_finish_request();
-	}
-	
-	$config			= require __DIR__ . '/../xhprof/includes/config.inc.php';
-	
-	require_once __DIR__ . '/../xhprof/classes/data.php';
-	
-	$xhprof_data_obj	= new \ay\xhprof\Data($config['pdo']);
-	$xhprof_data_obj->save($xhprof_data);
-});
+trigger_error($err_msg, E_USER_DEPRECATED);

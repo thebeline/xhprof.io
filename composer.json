@@ -1,0 +1,25 @@
+{
+  "name": "staabm/xhprof.io",
+  "description": "GUI to analyze the profiling data collected using XHProf - A Hierarchical Profiler for PHP.",
+  "keywords": ["xhprof", "profiler", "gui", "frontend"],
+  "license": "BSD-2-Clause",
+  "authors": [
+      {
+        "name": "Gajus Kuizinas"
+      },
+      {
+        "name": "Markus Staab",
+        "email": "maggus.staab@googlemail.com"
+      }
+  ],
+  "autoload": {
+    "classmap": ["xhprof/classes"]
+  },
+  "require": {
+    "php": ">=5.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": ">=3.7",
+    "athletic/athletic": "~0.1.6"
+  }
+}
