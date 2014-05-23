@@ -87,7 +87,7 @@ class callgraph
                     }
                 }
                 
-                $href = '?xhprof[template]=function&xhprof[query][request_id]='. $this->request['id'] .'&xhprof[query][callee_id]='. $e['callee_id'];
+                $href = htmlentities('?xhprof[template]=function&xhprof[query][request_id]='. $this->request['id'] .'&xhprof[query][callee_id]='. $e['callee_id']);
 
                 $players[$callee_uid]	= "\t\"" . $callee_uid . '"[shape=none,href="'. $href .'",target="_blank",tooltip="'. $e['callee'] .'",label=<
                 <table border="0" cellspacing="0" cellborder="1" cellpadding="2" CELLSPACING="0">
