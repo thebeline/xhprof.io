@@ -3,6 +3,8 @@ namespace ay\xhprof;
 ?>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
     <link rel="stylesheet" href="<?=$config['url_static']?>css/frontend.css">
     <link rel="stylesheet" href="<?=$config['url_static']?>css/font-awesome.min.css">
     <link rel="stylesheet" href="<?=$config['url_static']?>css/jquery-ui.custom.min.css">
@@ -15,7 +17,7 @@ namespace ay\xhprof;
     <script type="text/javascript" src="<?=$config['url_static']?>js/jquery.ay-table-sort.js"></script>
     <script type="text/javascript" src="<?=$config['url_static']?>js/jquery.ay-table-sticky.js"></script>
 
-    <script type="text/javascript" src="<?=$config['url_static']?>js/d3.v2.js"></script>
+    <script type="text/javascript" src="<?=$config['url_static']?>js/d3.v2.js" charset="UTF-8"></script>
     <script type="text/javascript" src="<?=$config['url_static']?>js/crossfilter.v1.js"></script>
     <script type="text/javascript" src="<?=$config['url_static']?>js/d3.crossfilter.ay-histogram.js"></script>
     <script type="text/javascript" src="<?=$config['url_static']?>js/d3.ay-pie-chart.js"></script>
