@@ -109,7 +109,7 @@ CREATE TABLE `request_uris` (
   `hash_value` varchar(255) NOT NULL DEFAULT '',
   `uri` LONGBLOB NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `hash_value` (`hash_value`) USING HASH,
+  UNIQUE KEY `hash_value` (`hash_value`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
