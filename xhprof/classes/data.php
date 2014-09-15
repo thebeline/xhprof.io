@@ -140,10 +140,11 @@ class data
               SELECT
                 (SELECT `id` FROM `request_methods` WHERE `method` = %s LIMIT 1) as 'method_id',
                 (SELECT `id` FROM `request_hosts` WHERE `host` = %s LIMIT 1) as 'host_id',
-                (SELECT `id` FROM `request_uris` WHERE `uri` = %s LIMIT 1) as 'uri_id';",
+                (SELECT `id` FROM `request_uris` WHERE `uri` = %s AND `hash_value` = %s LIMIT 1) as 'uri_id';",
                 $this->db->quote($_SERVER['REQUEST_METHOD']),
                 $this->db->quote($_SERVER['HTTP_HOST']),
-                $this->db->quote($_SERVER['REQUEST_URI'])
+                $this->db->quote($_SERVER['REQUEST_URI']),
+                $this->db->quote(sha1($_SERVER['REQUEST_URI']))
         );
         $request = $this->db->query($query)->fetch(PDO::FETCH_ASSOC);
 
@@ -160,7 +161,10 @@ class data
         }
 
         if(!isset($request['uri_id'])) {
-            $this->db->query(sprintf("INSERT INTO `request_uris` SET `uri` = %s;", $this->db->quote($_SERVER['REQUEST_URI'])));
+            $this->db->query(sprintf("INSERT INTO `request_uris` SET `uri` = %s, `hash_value` = %s;", 
+                $this->db->quote($_SERVER['REQUEST_URI']),
+                $this->db->quote(sha1($_SERVER['REQUEST_URI']))
+            ));
 
             $request['uri_id']		= $this->db->lastInsertId();
         }
