@@ -106,9 +106,9 @@ DROP TABLE IF EXISTS `request_uris`;
 
 CREATE TABLE `request_uris` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uri` varchar(255) NOT NULL DEFAULT '',
+  `uri` varchar(8192) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uri` (`uri`),
+  UNIQUE KEY `uri` (`uri`(255)),
   KEY `id` (`id`,`uri`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
