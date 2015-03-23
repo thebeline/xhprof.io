@@ -1,5 +1,6 @@
 xhprof.io
 =========
+[![Build Status](https://travis-ci.org/staabm/xhprof.io.svg)](https://travis-ci.org/staabm/xhprof.io)
 
 GUI to analyze the profiling data collected using XHProf – A Hierarchical Profiler for PHP.
 
