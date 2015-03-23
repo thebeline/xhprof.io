@@ -9,7 +9,7 @@ php:
     - 7.0
 
 before_script:
-  - composer update --prefer-source
+  - composer update
   - mysql -e 'create database xhprof;'
   - mysql xhprof < ./setup/database.sql
 
