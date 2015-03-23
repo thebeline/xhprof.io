@@ -108,8 +108,6 @@ CREATE TABLE `request_uris` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uri` varchar(8192) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-# max length for a unqiue key is 767 bytes
-  UNIQUE KEY `uri` (`uri`(700)),
   KEY `id` (`id`,`uri`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
