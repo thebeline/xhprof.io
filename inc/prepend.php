@@ -15,11 +15,6 @@ function xhprof_init()
         return false;
     }
 
-    // currently not supported on CLI
-    if(php_sapi_name() == 'cli') {
-        return false;
-    }
-
     // do not profile debugging sessions (ZendDebugger)
     if (!empty($_COOKIE['start_debug'])) {
         return false;
