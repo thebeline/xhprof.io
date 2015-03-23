@@ -108,7 +108,7 @@ CREATE TABLE `request_uris` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uri` varchar(8192) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  KEY `uri` (`uri`(255)),
+  UNIQUE KEY `uri` (`uri`),
   KEY `id` (`id`,`uri`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
