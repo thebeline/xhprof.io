@@ -28,7 +28,7 @@ class DataPersistancePerfEvent extends Athletic\AthleticEvent
         $_SERVER['REQUEST_URI'] = '/index.htm';
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
-        $xhprof_data_obj = new \ay\xhprof\Data($this->pdo);
+        $xhprof_data_obj = new \ay\xhprof\data($this->pdo);
         $xhprof_data_obj->save($this->testProfile);
     }
 }
