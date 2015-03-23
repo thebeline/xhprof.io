@@ -132,8 +132,16 @@ class data
      */
     public function save(array $xhprof_data)
     {
-        if(!isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'])) {
-            throw new DataException('XHProf.io cannot function in a server environment that does not define REQUEST_METHOD, HTTP_HOST or REQUEST_URI.');
+        if(php_sapi_name() == 'cli') {
+            $method = 'CRON';
+            $host = gethostname();
+            $uri = implode(' ', $_SERVER['argv']);            
+        }else if(isset($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'])) {
+            $method = $_SERVER['REQUEST_METHOD'];
+            $host = $_SERVER['HTTP_HOST'];
+            $uri = $_SERVER['REQUEST_URI'];
+        }else{
+            throw new DataException('XHProf.io cannot function in a server environment that does not define a CRON environment or REQUEST_METHOD, HTTP_HOST or REQUEST_URI.');
         }
 
         $query = sprintf("
@@ -141,26 +149,26 @@ class data
                 (SELECT `id` FROM `request_methods` WHERE `method` = %s LIMIT 1) as 'method_id',
                 (SELECT `id` FROM `request_hosts` WHERE `host` = %s LIMIT 1) as 'host_id',
                 (SELECT `id` FROM `request_uris` WHERE `uri` = %s LIMIT 1) as 'uri_id';",
-                $this->db->quote($_SERVER['REQUEST_METHOD']),
-                $this->db->quote($_SERVER['HTTP_HOST']),
-                $this->db->quote($_SERVER['REQUEST_URI'])
+                $this->db->quote($method),
+                $this->db->quote($host),
+                $this->db->quote($uri)
         );
         $request = $this->db->query($query)->fetch(PDO::FETCH_ASSOC);
 
         if(!isset($request['method_id'])) {
-            $this->db->query(sprintf("INSERT INTO `request_methods` SET `method` = %s;", $this->db->quote($_SERVER['REQUEST_METHOD'])));
+            $this->db->query(sprintf("INSERT INTO `request_methods` SET `method` = %s;", $this->db->quote($method)));
 
             $request['method_id']	= $this->db->lastInsertId();
         }
 
         if(!isset($request['host_id'])) {
-            $this->db->query(sprintf("INSERT INTO `request_hosts` SET `host` = %s;", $this->db->quote($_SERVER['HTTP_HOST'])));
+            $this->db->query(sprintf("INSERT INTO `request_hosts` SET `host` = %s;", $this->db->quote($host)));
 
             $request['host_id']		= $this->db->lastInsertId();
         }
 
         if(!isset($request['uri_id'])) {
-            $this->db->query(sprintf("INSERT INTO `request_uris` SET `uri` = %s;", $this->db->quote($_SERVER['REQUEST_URI'])));
+            $this->db->query(sprintf("INSERT INTO `request_uris` SET `uri` = %s;", $this->db->quote($uri)));
 
             $request['uri_id']		= $this->db->lastInsertId();
         }
