@@ -4,6 +4,7 @@ ChangeLog
 1.1.DEV (2015-04-XX)
 --------------------
 
+* added support for min-thresholds per xhprof metric (mdevine82)
 * added support for profiling CLI scripts (mdevine82)
 * uri column was extended to 8192 chars, for very long url support (wyattwalter)
 * fixed encoding issues with d3.v2.js (lastmirage)
