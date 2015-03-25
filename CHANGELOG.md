@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-1.1.DEV (2015-04-XX)
+1.1.0 (2015-04-25)
 --------------------
 
 * added support for min-thresholds per xhprof metric (mdevine82)
