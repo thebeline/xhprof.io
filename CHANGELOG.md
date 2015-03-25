@@ -1,8 +1,11 @@
 ChangeLog
 =========
 
-1.1.0 (2015-04-25)
+1.1.DEV (2015-XX-XX)
 --------------------
+
+1.1.0 (2015-04-25)
+------------------
 
 * added support for min-thresholds per xhprof metric (mdevine82)
 * added support for profiling CLI scripts (mdevine82)
