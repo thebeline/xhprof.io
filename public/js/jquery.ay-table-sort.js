@@ -68,14 +68,14 @@
 				
 				var desc;
 				
-				if ($(this).hasClass('ay-sort-asc')) {
-					$(this).removeClass('ay-sort-asc').addClass('ay-sort-desc');
-					
-					desc	= 1;
-				} else {
+				if ($(this).hasClass('ay-sort-desc')) {
 					$(this).removeClass('ay-sort-desc').addClass('ay-sort-asc');
 					
 					desc	= 0;
+				} else {
+					$(this).removeClass('ay-sort-asc').addClass('ay-sort-desc');
+				
+					desc	= 1;
 				}				
 				
 				var index	= $(this).data('ay-sort-index') === undefined ? $(this).index() : $(this).data('ay-sort-index');
