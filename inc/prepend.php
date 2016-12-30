@@ -15,11 +15,6 @@ function xhprof_init()
         return false;
     }
 
-    // currently not supported on CLI
-    if(php_sapi_name() == 'cli') {
-        return false;
-    }
-
     // do not profile debugging sessions (ZendDebugger)
     if (!empty($_COOKIE['start_debug'])) {
         return false;
@@ -70,6 +65,11 @@ function xhprof_shutdown()
         fastcgi_finish_request();
     }
 
+    //Check to see if xhprof data exceed minimum set profile times
+    if (!xhprof_check_min_run_values($xhprof_data, $xhprofMainConfig)) {
+            return;
+    }
+
     try {
         require_once __DIR__ . '/../xhprof/classes/data.php';
 
@@ -88,4 +88,36 @@ function xhprof_shutdown()
         // re-throw to show the caller something went wrong
         throw $e;
     }
+}
+
+// Check profile run times and opt not to store the data if they are below
+// set thresholds.  This should reduce amount of stored data for production
+// instances.
+function xhprof_check_min_run_values($profile_data, $xhprofMainConfig) {
+    $store_flag = true;
+
+    $lastElement = end($profile_data);
+
+    $wallTimeExists = isset($lastElement['wt']) && isset($xhprofMainConfig['min_wall_time']);
+
+    if ($wallTimeExists && $lastElement['wt'] < $xhprofMainConfig['min_wall_time']) {
+            $store_flag = false;
+    }
+
+    $cpuTimeExists = isset($lastElement['cpu']) && isset($xhprofMainConfig['min_cpu_time']);
+    if ($store_flag && $cpuTimeExists && $lastElement['cpu'] < $xhprofMainConfig['min_cpu_time']) {
+            $store_flag = false;
+    }
+
+    $memUsageExists = isset($lastElement['mu']) && isset($xhprofMainConfig['min_mem_usage']);
+    if ($store_flag && $memUsageExists && $lastElement['mu'] < $xhprofMainConfig['min_mem_usage']) {
+            $store_flag = false;
+    }
+
+    $peakMemUsageExists = isset($lastElement['pmu']) && isset($xhprofMainConfig['min_peak_mem_usage']);
+    if ($store_flag && $peakMemUsageExists && $lastElement['pmu'] < $xhprofMainConfig['min_peak_mem_usage']) {
+            $store_flag = false;
+    }
+
+    return $store_flag;
 }
